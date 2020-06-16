@@ -1,4 +1,3 @@
 /node_modules
-/lib/*
-/input/*
-/output/*
+/input
+/output
