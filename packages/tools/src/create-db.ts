@@ -1,3 +1,5 @@
+import { CountyData, Db, RegistrationData, StateData } from '@fix-policing/shared';
+
 import * as TE from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
 
@@ -5,39 +7,6 @@ import * as R from 'ramda';
 
 import { readData, parseCSV, stringifyJSON, writeData, capitalizeAll } from './util';
 import { sequenceT } from 'fp-ts/lib/Apply';
-
-type RegistrationData = {
-    deadline: string;
-    link: string;
-};
-
-type Incident = {
-    id: string;
-    name: string;
-    date: string;
-    cause: string;
-    armed: string;
-    age: number;
-    gender: string;
-    race: string;
-    mentalIllness: boolean;
-    threat: string;
-    fleeing: boolean;
-    bodyCamera: boolean;
-};
-
-type CountyData = {
-    name: string;
-    incidents: Incident[];
-};
-
-type StateData = {
-    name: string;
-    registration: RegistrationData;
-    counties: CountyData[];
-};
-
-type Db = { [state: string]: StateData };
 
 // states-and-counties.csv format:
 // City, State abv, State, County

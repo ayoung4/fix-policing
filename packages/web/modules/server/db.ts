@@ -1,3 +1,5 @@
+import { Db } from '@fix-policing/shared';
+
 import * as TE from 'fp-ts/lib/TaskEither';
 import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/function';
@@ -5,39 +7,6 @@ import { pipe } from 'fp-ts/lib/function';
 import { promises as fs } from 'fs';
 
 import { memoize } from '../shared/util';
-
-type RegistrationData = {
-    deadline: string;
-    link: string;
-};
-
-type Incident = {
-    id: string;
-    name: string;
-    date: string;
-    cause: string;
-    armed: string;
-    age: string;
-    gender: string;
-    race: string;
-    mentalIllness: boolean;
-    threat: string;
-    fleeing: boolean;
-    bodyCamera: boolean;
-};
-
-type CountyData = {
-    name: string;
-    incidents: Incident[];
-};
-
-type StateData = {
-    name: string;
-    registration: RegistrationData;
-    counties: CountyData[];
-};
-
-type Db = { [state: string]: StateData };
 
 const readData = (filename: string) =>
     TE.tryCatch(
