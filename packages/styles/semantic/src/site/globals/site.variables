@@ -1,0 +1,26 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@fontName          : 'WorkSans';
+@fontSmoothing     : antialiased;
+@googleFontFamily  : ''Work Sans'';
+
+@googleFontName    : @fontName;
+@importGoogleFonts : true;
+@googleFontSizes   : '400,700,400italic,700italic';
+@googleSubset      : 'latin';
+
+@googleProtocol    : 'https://';
+@googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
+
+@headerFont        : @fontName, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@pageFont          : @fontName, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+@blue              : #5458F7;
+@yellow            : #EFE91F;
+@red               : #FF0000;
+
+@emSize            : 17px;
+@fontSize          : 17px;
+@headerFontWeight  : 700;

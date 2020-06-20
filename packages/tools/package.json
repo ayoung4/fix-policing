@@ -1,5 +1,5 @@
 {
-  "name": "tools",
+  "name": "@fix-policing/tools",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,12 +7,18 @@
     "clean": "rm -rf ./lib",
     "compile": "tsc -p tsconfig.json",
     "build": "npm run clean && npm run compile",
-    "tool-1": "npm run build && node ./lib/tool-1",
-    "tool-2": "npm run build && node ./lib/tool-2"
+    "create-db": "npm run build && node ./lib/create-db.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/lodash": "^4.14.155",
+    "@types/ramda": "^0.27.6",
     "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "fp-ts": "^2.6.6",
+    "lodash": "^4.17.15",
+    "ramda": "^0.27.0"
   }
 }
