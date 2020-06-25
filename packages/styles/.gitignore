@@ -1,7 +1,3 @@
 bower_components
-semantic/dist/components
-semantic/dist/themes/*
-!semantic/dist/*.js
-!semantic/dist/*.css
-!semantic/dist/themes/default/
+semantic/dist
 /node_modules
