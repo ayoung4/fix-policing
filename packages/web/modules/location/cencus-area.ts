@@ -3,7 +3,7 @@ import { pipe } from 'fp-ts/lib/function';
 
 import * as R from 'ramda';
 
-import { httpGet } from './util';
+import { httpGet } from '../util';
 
 export type CencusArea = {
     county_fips: string;

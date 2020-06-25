@@ -9,7 +9,12 @@ type Props = {
 
 export const Headline: React.FC<Props> =
     ({ numIncidents, county, state }) =>
-        <Header size='huge' textAlign='center'>
+        <Header
+            size='huge'
+            textAlign='center'
+            style={{ marginTop: '3rem', marginBottom: '3rem' }}
+            
+        >
             Since 2015, there {numIncidents === 1 ? 'has' : 'have'} been&nbsp;
             {numIncidents} fatal shooting{numIncidents === 1 ? '' : 's'} by&nbsp;
             a police officer in the line of duty in {county} County, {state}.

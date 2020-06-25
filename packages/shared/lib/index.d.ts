@@ -15,6 +15,7 @@ export declare type Incident = {
     threat: string;
     fleeing: boolean;
     bodyCamera: boolean;
+    city: string;
 };
 export declare type CountyData = {
     name: string;

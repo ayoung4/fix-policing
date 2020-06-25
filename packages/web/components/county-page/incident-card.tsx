@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Card } from 'semantic-ui-react';
 
 type Props = {
-    key?: string | number;
     name: string;
     age: string | number;
     race: string;
@@ -10,10 +9,10 @@ type Props = {
     cause: string;
     city: string;
     state: string;
+    date: string;
 };
 
 export const IncidentCard: React.FC<Props> = ({
-    key,
     name,
     age,
     race,
@@ -21,13 +20,14 @@ export const IncidentCard: React.FC<Props> = ({
     cause,
     city,
     state,
+    date,
 }) => (
-    <Card key={key}>
-        <Card.Content>
-            <Card.Header size='small'>{name}</Card.Header>
-            <Card.Description>
-                A {age} year old {race} {gender} was {cause} in {city}, {state}.
-            </Card.Description>
-        </Card.Content>
-    </Card>
-);
+        <Card>
+            <Card.Content>
+                <Card.Header size='small'>{name}</Card.Header>
+                <Card.Description>
+                    A {age} year old {race} {gender} was {cause} on {date}, in {city}, {state}.
+                </Card.Description>
+            </Card.Content>
+        </Card>
+    );

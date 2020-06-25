@@ -17,6 +17,9 @@ export const capitalizeAll = R.pipe(
     R.join(' '),
 );
 
+export const tapLog: (s: string) => <A>(a: A) => A =
+    (s) => R.tap((x) => console.log(s, x));
+
 export const memoize: <A>(ma: IO.IO<A>) => IO.IO<A> = <A>(ma) => {
     let cache: A;
     let done = false;

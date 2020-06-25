@@ -45,7 +45,7 @@ const expandRace = (r: string) =>
                 ? 'asian'
                 : r === 'h'
                     ? 'hispanic'
-                    : 'racially unidentified';
+                    : '';
 
 const expandGender = (g: string) =>
     g === 'm'
@@ -53,6 +53,11 @@ const expandGender = (g: string) =>
         : g === 'f'
             ? 'woman'
             : 'person';
+
+const santitizeName = R.pipe(
+    R.replace(/"/g, ''),
+    capitalizeAll,
+);
 
 // incidents.csv format:
 // id, name, date, manner_of_death, armed, age, gender, race,
@@ -81,7 +86,9 @@ const readIncidents = pipe(
         county,
     ]) => ({
         id,
-        name: capitalizeAll(name || ''),
+        name: name === 'tk tk'
+            ? 'Name Not Provided'
+            : santitizeName(name || ''),
         date,
         cause,
         armed,
@@ -94,7 +101,7 @@ const readIncidents = pipe(
         threat,
         fleeing: Boolean(fleeing),
         bodyCamera: Boolean(bodyCamera),
-        county: capitalizeAll(county || ''),
+        county: county || '',
     }))),
 );
 
@@ -108,7 +115,7 @@ const tool = pipe(
         R.reduce(
             (acc, { state, deadline, link }) => ({
                 ...acc,
-                [state]: {
+                [R.toLower(state)]: {
                     name: state,
                     registration: {
                         deadline,
@@ -118,9 +125,9 @@ const tool = pipe(
                         (acc, { county }: any) => [
                             ...acc,
                             {
-                                name: capitalizeAll(county),
+                                name: R.toLower(county),
                                 incidents: R.filter(
-                                    (i) => i.county === capitalizeAll(county),
+                                    (i) => i.county === county,
                                     incidents,
                                 ),
                             },

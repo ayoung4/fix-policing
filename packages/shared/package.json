@@ -1,6 +1,7 @@
 {
   "name": "@fix-policing/shared",
   "version": "1.0.0",
+  "private": false,
   "description": "",
   "main": "lib/index.js",
   "files": [

@@ -2,4 +2,4 @@
     User Variable Overrides
 *******************************/
 
-@maxWidth : 48rem;
+@maxWidth : 96rem;

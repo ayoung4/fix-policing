@@ -8,7 +8,7 @@
  * http://opensource.org/licenses/MIT
  *
  */
-@import url('https://fonts.googleapis.com/css?family=WorkSans:400,700,400italic,700italic&subset=latin');
+@import url('https://fonts.googleapis.com/css?family=WorkSans:400,700,400italic,700italic,800,800italic&subset=latin');
 /*!
  * # Semantic UI 2.4.2 - Reset
  * http://github.com/semantic-org/semantic-ui/
@@ -5144,7 +5144,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
 
 .ui.container {
   display: block;
-  max-width: 48rem !important;
+  max-width: 96rem !important;
 }
 
 /* Mobile */

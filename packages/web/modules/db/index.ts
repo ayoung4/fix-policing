@@ -6,7 +6,7 @@ import { pipe } from 'fp-ts/lib/function';
 
 import { promises as fs } from 'fs';
 
-import { memoize } from '../shared/util';
+import { memoize } from '../util';
 
 const readData = (filename: string) =>
     TE.tryCatch(
