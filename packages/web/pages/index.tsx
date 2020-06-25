@@ -23,7 +23,7 @@ const getProps = (ip: string) => pipe(
         ({ state, county }) => T.of<LandingPageProps>({
             success: true,
             stateCode: R.toUpper(state.code),
-            countyName: capitalizeAll(state.name),
+            countyName: capitalizeAll(county),
             countyPageLink: `/${state.name}/${county}`,
         }),
     ),

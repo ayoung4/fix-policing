@@ -1,16 +1,15 @@
 import * as T from 'fp-ts/lib/Task';
 import * as TE from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
+import { sequenceT } from 'fp-ts/lib/Apply';
 
 import * as R from 'ramda';
 import * as _ from 'lodash';
-import moment from 'moment';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 import { capitalizeAll } from '../../modules/util';
 import { getDb } from '../../modules/db';
 import { CountyPage, CountyPageProps } from '../../components/pages/county';
-import { sequenceT } from 'fp-ts/lib/Apply';
 
 type Params = {
     state: string;
@@ -32,7 +31,7 @@ const getProps = (state, county) => pipe(
                     )),
                 ),
             ),
-            TE.chain(([{ counties, registration }, county]) =>
+            TE.chain(([{ registration }, county]) =>
                 !!county
                     ? TE.right({
                         state: capitalizeAll(state),
@@ -49,19 +48,10 @@ const getProps = (state, county) => pipe(
             success: false,
             reason: e.message,
         }),
-        ({ state, incidents, county, registration }) =>
+        (res) =>
             T.of<CountyPageProps>({
                 success: true,
-                state,
-                county,
-                registration,
-                incidents: R.map(
-                    (i) => ({
-                        ...i,
-                        date: moment(i.date).format('MMMM Do YYYY'),
-                    }),
-                    incidents,
-                ),
+                ...res,
             }),
     ),
     T.map((props) => ({ props }))

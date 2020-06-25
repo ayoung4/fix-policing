@@ -56,7 +56,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
 
                     >
                         Since 2015, there {props.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
-                        {props.incidents.length} fatal shooting{props.incidents.length === 1 ? '' : 's'} by&nbsp;
+                        {props.incidents.length} fatal shooting{props.incidents.length === 1 ? '' : 's'} by
                         a police officer in the line of duty in {props.county} County, {props.state}.
                     </Header>)
                     : (<Header
@@ -84,7 +84,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
                                 race={incident.race}
                                 gender={incident.gender}
                                 state={props.state}
-                                date={moment(incident.date).format('MMMM Do YYYY')}
+                                date={moment(incident.date).calendar()}
                             />
                         ),
                         props.incidents,

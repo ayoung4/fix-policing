@@ -32,6 +32,7 @@ export const LandingPage: NextPage<LandingPageProps> = (props) => (
                 display: 'flex',
                 minHeight: '100vh',
                 flexDirection: 'column',
+                paddingTop: '1rem',
             }}>
                 <Nav />
                 <div style={{
@@ -43,6 +44,7 @@ export const LandingPage: NextPage<LandingPageProps> = (props) => (
                     <Header style={{
                         textAlign: 'center',
                         fontSize: '2.8rem',
+                        marginTop: '0.5rem',
                     }}>
                         How’s policing in your community?
                     </Header>
