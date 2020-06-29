@@ -6,7 +6,7 @@ import { Container, Header, Button, Icon } from 'semantic-ui-react';
 
 import { Head } from '../../head';
 
-import { Nav } from './nav';
+import { Nav } from '../../nav';
 
 export type LandingPageProps = {
     success: true;

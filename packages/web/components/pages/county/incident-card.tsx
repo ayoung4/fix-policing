@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Header } from 'semantic-ui-react';
 
 type Props = {
     name: string;
@@ -24,7 +24,7 @@ export const IncidentCard: React.FC<Props> = ({
 }) => (
         <Card>
             <Card.Content>
-                <Card.Header size='small'>{name}</Card.Header>
+                <Header size='small' color='blue'>{name}</Header>
                 <Card.Description>
                     A {age} year old {race} {gender} was {cause} on {date}, in {city}, {state}.
                 </Card.Description>
