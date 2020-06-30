@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, Header } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import Link from 'next/link';
 
 type NavProps = {
@@ -10,27 +10,21 @@ export const Nav: React.FC<NavProps> = ({ fixed }) => (
     <Menu
         secondary
         fluid
-        compact
         fixed={fixed ? 'top' : undefined}
         size='massive'
         style={{ paddingTop: '0.8rem' }}
     >
-        <Menu.Item header>
-            <Link href='/'>
+        <Link href='/'>
+            <Menu.Item header as='a'>
                 fixpolicing.com
-            </Link>
-        </Menu.Item>
+            </Menu.Item>
+        </Link>
         <Menu.Menu position='right'>
-            <Menu.Item>
-                <Link href='/about'>
+            <Link href='/about'>
+                <Menu.Item as='a'>
                     About
-                </Link>
-            </Menu.Item>
-            <Menu.Item>
-                <Link href='/contact'>
-                    Contact
-                </Link>
-            </Menu.Item>
+                </Menu.Item>
+            </Link>
         </Menu.Menu>
     </Menu>
 );

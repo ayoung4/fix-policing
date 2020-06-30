@@ -11,12 +11,11 @@ import {
     Button,
     Grid,
     Segment,
-    List,
 } from 'semantic-ui-react';
 
 import { Head } from '../../head';
 import { IncidentCard } from './incident-card';
-import Link from 'next/link';
+import { Footer } from '../../footer';
 
 export type CountyPageProps = {
     success: true;
@@ -58,7 +57,6 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
                         size='huge'
                         textAlign='center'
                         style={{ marginTop: '3rem', marginBottom: '3rem' }}
-
                     >
                         Since 2015, there {props.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
                         <span style={{ color: props.incidents.length > 0 ? 'red' : undefined }}>{props.incidents.length} fatal shooting{props.incidents.length === 1 ? '' : 's'}</span> by
@@ -89,7 +87,13 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
                                 race={incident.race}
                                 gender={incident.gender}
                                 state={props.state}
-                                date={moment(incident.date).calendar()}
+                                date={(() => {
+                                    return incident.date;
+                                    // const m = moment(incident.date);
+                                    // return m.isValid()
+                                    //     ? m.calendar()
+                                    //     : incident.date;
+                                })()}
                             />
                         ),
                         props.incidents,
@@ -145,27 +149,9 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
                     size='huge'
                     textAlign='center'
                 >
-                    If you don’t vote, nothing changes. In 2018, <span style={{ color: 'red' }}>only 1 in 3 young people voted nationally.</span>
+                    If you don’t vote, nothing changes. In 2018, <span style={{ color: 'red' }}>only 1 in 3 young people voted nationally.</span> Register to vote, register your neighbors, and get a mail in ballot. It’s easy as:
                 </Header>
-            </div>
-            <div style={{
-                display: 'flex',
-                flex: 1,
-                minHeight: '16rem',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-            }}>
-                <Header
-                    size='huge'
-                    textAlign='center'
-                    style={{
-                        marginBottom: '4.5rem',
-                    }}
-                >
-                    Register to vote, register your neighbors, and get a mail in ballot. It’s easy as:
-                </Header>
-                <Grid columns={3} stackable style={{ minHeight: '16rem', marginBottom: '4rem' }}>
+                <Grid columns={3} stackable style={{ minHeight: '16rem', marginTop: '1rem', marginBottom: '4rem' }}>
                     <Grid.Column textAlign='center'>
                         <div style={{
                             display: 'flex',
@@ -253,67 +239,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => (
         </Container>
         <Segment inverted vertical style={{ padding: '2em 0em' }}>
             <Container>
-                <Grid divided inverted stackable>
-                    <Grid.Row>
-                        <Grid.Column width={3}>
-                            <Header inverted as='h5' content='fixpolicing.com' />
-                            <List link inverted>
-                                <List.Item>
-                                    <Link href='/about'>
-                                        About
-                                    </Link>
-                                </List.Item>
-                                <List.Item>
-                                    <Link href='/contact'>
-                                        Contact
-                                    </Link>
-                                </List.Item>
-                            </List>
-                        </Grid.Column>
-                        <Grid.Column width={5}>
-                            <Header inverted as='h5' content='external links' />
-                            <List link inverted>
-                                <List.Item
-                                    as='a'
-                                    href='https://github.com/ayoung4/fix-policing'
-                                    target='_blank'
-                                >
-                                    Github
-                                </List.Item>
-                                <List.Item
-                                    as='a'
-                                    href='https://realjusticepac.org/'
-                                    target='_blank'
-                                >
-                                    Real Justice PAC
-                                </List.Item>
-                                <List.Item
-                                    as='a'
-                                    href='https://theyreporttoyou.org/'
-                                    target='_blank'
-                                >
-                                    They Report To You
-                                </List.Item>
-                                <List.Item
-                                    as='a'
-                                    href='https://www.washingtonpost.com/graphics/investigations/police-shootings-database/'
-                                    target='_blank'
-                                >
-                                    Washington Post Police Shootings Investigation
-                                </List.Item>
-                                <List.Item
-                                    as='a'
-                                    href='https://policingequity.org/'
-                                    target='_blank'
-                                >
-                                    Center for Policing Equity
-                                </List.Item>
-                            </List>
-                        </Grid.Column>
-                        <Grid.Column width={7}>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                <Footer />
             </Container>
         </Segment>
     </div >

@@ -1,11 +1,11 @@
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage } from 'next';
 
 import * as React from 'react';
-import { Container, Header } from 'semantic-ui-react';
+import { Container, Header, Segment } from 'semantic-ui-react';
 
 import { Head } from '../../head';
-
 import { Nav } from '../../nav';
+import { Footer } from '../../footer';
 
 export const AboutPage: NextPage = () => (
     <div style={{
@@ -49,5 +49,10 @@ export const AboutPage: NextPage = () => (
                 </p>
             </div>
         </Container>
+        <Segment inverted vertical style={{ padding: '2em 0em' }}>
+            <Container>
+                <Footer />
+            </Container>
+        </Segment>
     </div>
 );
