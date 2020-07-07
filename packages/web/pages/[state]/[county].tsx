@@ -10,6 +10,7 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import { capitalizeAll } from '../../modules/util';
 import { getDb } from '../../modules/db';
 import { CountyPage, CountyPageProps } from '../../components/pages/county';
+import { Incident } from '@fix-policing/shared';
 
 type Params = {
     state: string;
@@ -37,7 +38,13 @@ const getProps = (state, county) => pipe(
                         state: capitalizeAll(state),
                         county: capitalizeAll(county.name),
                         registration,
-                        incidents: county.incidents
+                        incidents: R.map<Incident, Incident>(
+                            (i) => ({
+                                ...i,
+                                link: `https://www.google.com/search?q=${R.join('+', [...R.split(' ', i.name), county.name])}`
+                            }),
+                            county.incidents,
+                        )
                     })
                     : TE.left(new Error('the county is either missing from the database or misspelled')),
             ),
@@ -48,11 +55,10 @@ const getProps = (state, county) => pipe(
             success: false,
             reason: e.message,
         }),
-        (res) =>
-            T.of<CountyPageProps>({
-                success: true,
-                ...res,
-            }),
+        (res) => T.of<CountyPageProps>({
+            success: true,
+            ...res,
+        }),
     ),
     T.map((props) => ({ props }))
 );

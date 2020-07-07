@@ -1095,6 +1095,11 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
+"@fix-policing/shared@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@fix-policing/shared/-/shared-1.0.1.tgz#a4ede36b9a14c5b976054891025add1418bc69fb"
+  integrity sha512-5P/Hhc0UT8Tx0vQJVdoaGd5W17Bp2Y5gNC8vyz2pBascmqK09MjrS/fXaLJuUivAKp9pmqFQk8A0wG8EHkJsEw==
+
 "@lerna/add@3.21.0":
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.21.0.tgz#27007bde71cc7b0a2969ab3c2f0ae41578b4577b"

@@ -7,7 +7,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@fix-policing/shared": "1.0.0",
+    "@fix-policing/shared": "1.0.1",
     "axios": "^0.19.2",
     "fp-ts": "^2.6.6",
     "ip-regex": "^4.1.0",

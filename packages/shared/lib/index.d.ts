@@ -16,6 +16,7 @@ export declare type Incident = {
     fleeing: boolean;
     bodyCamera: boolean;
     city: string;
+    link?: string;
 };
 export declare type CountyData = {
     name: string;

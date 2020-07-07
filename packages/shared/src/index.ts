@@ -17,6 +17,7 @@ export type Incident = {
     fleeing: boolean;
     bodyCamera: boolean;
     city: string;
+    link?: string;
 };
 
 export type CountyData = {
