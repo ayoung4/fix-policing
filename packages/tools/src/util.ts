@@ -44,3 +44,11 @@ export const parseCSV = R.pipe(
     R.map(R.split(',')),
     R.map(R.map(R.trim)),
 );
+
+export const parseTSV = R.pipe(
+    R.toLower,
+    R.split('\n'),
+    R.tail,
+    R.map(R.split('\t')),
+    R.map(R.map(R.trim)),
+);

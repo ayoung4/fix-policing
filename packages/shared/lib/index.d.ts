@@ -18,9 +18,22 @@ export declare type Incident = {
     city: string;
     link?: string;
 };
+export declare type Election = {
+    state: string;
+    counties: string[];
+    type: string;
+    recommendedCandidate: string;
+    candidates: Candidate[];
+};
+export declare type Candidate = {
+    name: string;
+    imageLink: string;
+    websiteLink: string;
+};
 export declare type CountyData = {
     name: string;
     incidents: Incident[];
+    elections: Election[];
 };
 export declare type StateData = {
     name: string;

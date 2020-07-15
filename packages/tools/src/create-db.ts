@@ -2,11 +2,18 @@ import { CountyData, Db, RegistrationData, StateData } from '@fix-policing/share
 
 import * as TE from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
+import { sequenceT } from 'fp-ts/lib/Apply';
 
 import * as R from 'ramda';
 
-import { readData, parseCSV, stringifyJSON, writeData, capitalizeAll } from './util';
-import { sequenceT } from 'fp-ts/lib/Apply';
+import {
+    readData,
+    parseCSV,
+    parseTSV,
+    stringifyJSON,
+    writeData,
+    capitalizeAll,
+} from './util';
 
 // states-and-counties.csv format:
 // City, State abv, State, County
@@ -105,13 +112,78 @@ const readIncidents = pipe(
     }))),
 );
 
+// elections.tsv format:
+// State, Countys, Upcoming elections, Recommended Candidate, 
+// Candidate (I), Candidate (I): Image link, Candidate (I): Website, 
+// Candidate (C), Candidate (C): Image link, Candidate (C): Website,	
+// Candidate (C2), Candidate (C2): Image link, Candidate (C2): Website,	
+// Candidate (C3), Candidate (C3): Image link, Candidate (C3): Website,	
+// Candidate (C4), Candidate (C4): Image link, Candidate (C4): Website,	
+// Candidate (C5), Candidate (C5): Image link, Candidate (C5): Website,	
+// Candidate (C6), Candidate (C6): Image link, Candidate (C6): Website,	
+// Candidate (C7), Candidate (C7): Image link, Candidate (C7): Website,	
+// Candidate (C8), Candidate (C8): Image link, Candidate (C8): Website,	
+// Candidate (C9), Candidate (C9): Image link, Candidate (C9): Website,	
+// Candidate (C10),	Candidate (C10): Image link, Candidate (C10): Website
+
+const readElections = pipe(
+    readData('elections.tsv'),
+    TE.map(parseTSV),
+    TE.map(R.map(([
+        state, counties, type, recommendedCandidate,
+        i, iImage, iWebsite,
+        c1, c1Image, c1Website,
+        c2, c2Image, c2Website,
+        c3, c3Image, c3Website,
+        c4, c4Image, c4Website,
+        c5, c5Image, c5Website,
+        c6, c6Image, c6Website,
+        c7, c7Image, c7Website,
+        c8, c8Image, c8Website,
+        c9, c9Image, c9Website,
+        c10, c10Image, c10Website,
+    ]) => ({
+        state,
+        counties: pipe(
+            R.split(',', counties),
+            R.map(R.trim),
+        ),
+        type,
+        recommendedCandidate,
+        candidates: pipe(
+            R.filter(
+                ([name]) => !!name,
+                [
+                    [i, iImage, iWebsite],
+                    [c1, c1Image, c1Website],
+                    [c2, c2Image, c2Website],
+                    [c3, c3Image, c3Website],
+                    [c4, c4Image, c4Website],
+                    [c5, c5Image, c5Website],
+                    [c6, c6Image, c6Website],
+                    [c7, c7Image, c7Website],
+                    [c8, c8Image, c8Website],
+                    [c9, c9Image, c9Website],
+                    [c10, c10Image, c10Website],
+                ] as [string, string, string][],
+            ),
+            R.map(([name, imageLink, websiteLink]) => ({
+                name: santitizeName(name),
+                imageLink,
+                websiteLink,
+            })),
+        ),
+    }))),
+);
+
 const tool = pipe(
     sequenceT(TE.taskEither)(
         readStateAndCounties,
         readRegistration,
         readIncidents,
+        readElections,
     ),
-    TE.map(([counties, registration, incidents]) =>
+    TE.map(([counties, registration, incidents, elections]) =>
         R.reduce(
             (acc, { state, deadline, link }) => ({
                 ...acc,
@@ -130,6 +202,10 @@ const tool = pipe(
                                     (i) => i.county === county,
                                     incidents,
                                 ),
+                                elections: R.filter(
+                                    (e) => e.counties.includes(county),
+                                    elections,
+                                )
                             },
                         ],
                         [] as CountyData[],

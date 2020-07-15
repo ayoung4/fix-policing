@@ -7,7 +7,8 @@
     "clean": "rm -rf ./lib",
     "compile": "tsc -p tsconfig.json",
     "build": "npm run clean && npm run compile",
-    "create-db": "npm run build && node ./lib/create-db.js"
+    "create-db": "npm run build && node ./lib/create-db.js",
+    "elections": "npm run build && node ./lib/elections.js"
   },
   "author": "",
   "license": "ISC",

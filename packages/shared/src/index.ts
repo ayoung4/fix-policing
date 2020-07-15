@@ -20,9 +20,24 @@ export type Incident = {
     link?: string;
 };
 
+export type Election = {
+    state: string;
+    counties: string[];
+    type: string;
+    recommendedCandidate: string;
+    candidates: Candidate[];
+};
+
+export type Candidate = {
+    name:string;
+    imageLink: string;
+    websiteLink: string;
+};
+
 export type CountyData = {
     name: string;
     incidents: Incident[];
+    elections: Election[];
 };
 
 export type StateData = {
