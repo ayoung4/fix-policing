@@ -21,23 +21,23 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({ incidentCards }) => 
             alignItems: 'center',
         }}>
             <div style={{ width: '3rem' }}>
-                <Button
+                {incidentCards.length > 1 && (<Button
                     icon='left arrow'
                     circular
                     secondary
                     onClick={onBackClick}
                     style={{ margin: 0 }}
-                />
+                />)}
             </div>
             <IncidentCard {...incidentCards[index]} />
             <div style={{ width: '3rem' }}>
-                <Button
+                {incidentCards.length > 1 && (<Button
                     icon='right arrow'
                     circular
                     secondary
                     onClick={onNextClick}
                     style={{ margin: 0 }}
-                />
+                />)}
             </div>
         </div>
     )

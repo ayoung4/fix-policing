@@ -10,12 +10,20 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import { capitalizeAll } from '../../modules/util';
 import { getDb } from '../../modules/db';
 import { CountyPage, CountyPageProps } from '../../components/pages/county';
-import { Incident } from '@fix-policing/shared';
+import { Incident, Election, Candidate } from '@fix-policing/shared';
 
 type Params = {
     state: string;
     county: string;
 };
+
+const makeGoogleSearch = (query: string) =>
+    pipe(
+        query,
+        R.split(' '),
+        R.join('+'),
+        R.concat('https://www.google.com/search?q='),
+    );
 
 const getProps = (state, county) => pipe(
     getDb,
@@ -32,19 +40,39 @@ const getProps = (state, county) => pipe(
                     )),
                 ),
             ),
-            TE.chain(([{ registration }, county]) =>
+            TE.chain(([state, county]) =>
                 !!county
                     ? TE.right({
-                        state: capitalizeAll(state),
+                        ...county,
+                        elections: R.map<Election, Election>(
+                            (e) => ({
+                                ...e,
+                                type: capitalizeAll(e.type),
+                                candidates: R.map<Candidate, Candidate>(
+                                    (c) => ({
+                                        name: capitalizeAll(c.name),
+                                        imageLink: !!c.imageLink
+                                            ? c.imageLink
+                                            : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
+                                        websiteLink: !!c.websiteLink
+                                            ? c.websiteLink
+                                            : makeGoogleSearch(`${c.name} ${county.name} county ${state.name}`)
+                                    }),
+                                    e.candidates,
+                                )
+                            }),
+                            county.elections,
+                        ),
+                        registration: state.registration,
+                        state: capitalizeAll(state.name),
                         county: capitalizeAll(county.name),
-                        registration,
                         incidents: R.map<Incident, Incident>(
                             (i) => ({
                                 ...i,
-                                link: `https://www.google.com/search?q=${R.join('+', [...R.split(' ', i.name), county.name])}`
+                                link: makeGoogleSearch(`${i.name} ${county.name}`),
                             }),
                             county.incidents,
-                        )
+                        ),
                     })
                     : TE.left(new Error('the county is either missing from the database or misspelled')),
             ),

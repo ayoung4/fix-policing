@@ -1,4 +1,4 @@
-import { Incident } from '@fix-policing/shared';
+import { Incident, Election, Candidate } from '@fix-policing/shared';
 
 import * as React from 'react';
 import * as R from 'ramda';
@@ -11,7 +11,7 @@ import {
     Button,
     Grid,
     Segment,
-    Icon,
+    Image,
 } from 'semantic-ui-react';
 
 import { Head } from '../../head';
@@ -29,6 +29,7 @@ export type CountyPageProps = {
         link: string;
     };
     incidents: Incident[],
+    elections: Election[],
 } | {
     success: false;
     reason: string;
@@ -37,7 +38,7 @@ export type CountyPageProps = {
 export const CountyPage: React.FC<CountyPageProps> = (props) => {
 
     const [showIncidents, setShowIncidents] = React.useState(false);
-    
+
     return (
         <div>
             {props.success
@@ -115,11 +116,13 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                             <br />
                         </div>)}
                         <p style={{ textAlign: 'center' }}>Please click on any of the names above to view a Google search of their names and the city they were killed in. We encourage you to familiarize yourself with local coverage of each incident.</p>
-                        <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
-                            {showIncidents
-                                ? 'Collapse Fatal Incidents'
-                                : 'Show All Fatal Incidents'}
-                        </Button>
+                        {props.success && props.incidents.length > 1 && (
+                            <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
+                                {showIncidents
+                                    ? 'Collapse Fatal Incidents'
+                                    : 'Show All Fatal Incidents'}
+                            </Button>
+                        )}
                         <p style={{
                             textAlign: 'center',
                             marginTop: '1rem',
@@ -133,6 +136,59 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                         </p>
                     </div>
                 </div>
+                {props.success && (<div style={{
+                    display: 'flex',
+                    flex: 1,
+                    minHeight: '16rem',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                }}>
+                    <Header
+                        size='huge'
+                        textAlign='center'
+                    >
+                        {props.elections.length > 0
+                            ? 'These are the upcoming sherriff, CA, DA and judge elections in your county:'
+                            : 'There are no upcoming sherriff, CA, DA or judge elections in your county recorded in our database.'}
+                    </Header>
+                    {props.elections.length > 0 && (
+                        R.addIndex(R.map)((e: Election, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    display: 'flex',
+                                    flex: 1,
+                                    minHeight: '16rem',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <br />
+                                <Header size='large' textAlign='center'>{e.type}</Header>
+                                <br />
+                                <Card.Group>
+                                    {R.addIndex(R.map)(
+                                        (c: Candidate, i) => (
+                                            <Card as='a' href={c.websiteLink} target='_blank' key={i}>
+                                                <Image src={c.imageLink} wrapped ui={false} />
+                                                <Card.Content>
+                                                    <Card.Header size='small' color='blue'>{c.name}</Card.Header>
+                                                    <Card.Description>
+                                                        Click this tile to research this candidate for yourself.
+                                                    </Card.Description>
+                                                </Card.Content>
+                                            </Card>
+                                        ),
+                                        e.candidates,
+                                    )}
+                                </Card.Group>
+                                <br />
+                            </div>
+                        ), props.elections)
+                    )}
+                </div>)}
                 <div style={{
                     display: 'flex',
                     flex: 1,
@@ -147,7 +203,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                     }}>
                         “<b>1 in 5 Americans</b> interacts with law enforcement yearly.
                     Of those encounters, <b>1 million result in use of force</b>. And <b>if you’re Black, you are 2-4 times more likely to have force used</b> than if you are White”
-                </p>
+                    </p>
                     <p style={{
                         textAlign: 'center',
                         fontSize: '1.3rem',
@@ -257,6 +313,8 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                         </Grid.Column>
                     </Grid>
                 </div>
+                <br />
+                <br />
             </Container>
             <Segment inverted vertical style={{ padding: '2em 0em' }}>
                 <Container>
