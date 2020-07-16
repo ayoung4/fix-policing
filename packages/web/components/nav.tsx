@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Menu } from 'semantic-ui-react';
 import Link from 'next/link';
 
+import * as S from '../styles';
+
 type NavProps = {
     fixed?: boolean;
 };
@@ -12,7 +14,7 @@ export const Nav: React.FC<NavProps> = ({ fixed }) => (
         fluid
         fixed={fixed ? 'top' : undefined}
         size='massive'
-        style={{ paddingTop: '0.8rem' }}
+        style={S.p2y}
     >
         <Link href='/'>
             <Menu.Item header as='a'>

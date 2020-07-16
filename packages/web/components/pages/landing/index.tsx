@@ -8,6 +8,8 @@ import * as T from 'fp-ts/lib/Task';
 import * as E from 'fp-ts/lib/Either';
 import * as TE from 'fp-ts/lib/TaskEither';
 
+import * as S from '../../../styles';
+
 import { Head } from '../../head';
 import { Nav } from '../../nav';
 import { httpGet } from '../../../modules/util';
@@ -22,7 +24,16 @@ type State = RD.RemoteData<string, Location>;
 
 const renderButton = RD.fold<string, Location, React.ReactElement>(
     () => (
-        <div></div>
+        <div>
+            <Button
+                color='blue'
+                fluid
+                size='large'
+                disabled
+            >
+                Let's Find Out
+            </Button>
+        </div>
     ),
     () => (
         <div>
@@ -34,7 +45,7 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
             >
                 Let's Find Out
             </Button>
-            <p style={{ textAlign: 'center' }}>
+            <p style={S.concat(S.textCenter, S.m1y)}>
                 <Icon name='spinner' loading />
                 We're determining your county...
             </p>
@@ -50,7 +61,7 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
             >
                 Let's Find Out
             </Button>
-            <p style={{ textAlign: 'center' }}>
+            <p style={S.concat(S.textCenter, S.m1y)}>
                 <Icon name='map marker alternate' color='red' />
                 An error occured while trying to determine your location: {err}
             </p>
@@ -67,7 +78,7 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
                     Let's Find Out
                 </Button>
             </Link>
-            <p style={{ textAlign: 'center' }}>
+            <p style={S.concat(S.textCenter, S.m1y)}>
                 <Icon name='map marker alternate' color='red' />
                 Based on your IP address, we think you're in {countyName} County, {stateCode}.
             </p>
@@ -106,45 +117,28 @@ export const LandingPage: NextPage = () => {
     React.useEffect(() => { onRender() }, []);
 
     return (
-        <div style={{
-            backgroundColor: '#EFE91F',
-            position: 'relative',
-        }}>
+        <div style={S.bkYellow}>
             <Head
                 title='Fix Policing'
                 description={`How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`}
             />
-            <Container style={{ maxWidth: '40rem' }}>
-                <div style={{
-                    display: 'flex',
-                    minHeight: '100vh',
-                    flexDirection: 'column',
-                    paddingTop: '1rem',
-                }}>
-                    <Nav />
-                    <div style={{
-                        display: 'flex',
-                        flex: 2,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Header style={{
-                            textAlign: 'center',
-                            fontSize: '2.8rem',
-                            marginTop: '0.5rem',
-                        }}>
-                            How’s policing in your community?
+            <Container style={S.concat(S.flexColumn, S.p1y, S.vh100)}>
+                <Nav />
+                <div style={S.concat(
+                    S.flex2,
+                    S.alignItemsCenter,
+                    S.justifyContentCenter
+                )}>
+                    <Header size='huge' style={S.concat(S.textCenter, S.m1y)}>
+                        How’s policing in your community?
                     </Header>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        flex: 1,
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        {renderButton(state)}
-                    </div>
+                </div>
+                <div style={S.concat(
+                    S.flex1,
+                    S.alignItemsCenter,
+                    S.justifyContentCenter
+                )}>
+                    {renderButton(state)}
                 </div>
             </Container>
         </div>
