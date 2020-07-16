@@ -29,21 +29,34 @@ type LocationResult = {
 
 type LocateIp = (ip: string) => RTE.ReaderTaskEither<
     string,
-    Error,
+    string,
     LocationResult
 >;
 
+const checkIp = (ip: string): TE.TaskEither<string, string> =>
+    ip === '::1'
+        ? TE.left('localhost cant be located')
+        : ipRegex({ exact: true }).test(ip)
+            ? TE.right(ip)
+            : TE.left('invalid ip address');
+
+const apiEndpoint = (apiKey: string, ip: string) =>
+    `http://api.ipstack.com/${ip}?access_key=${apiKey}&fields=zip,longitude,latitude,city,country_name,country_code`;
+
 export const locateIp: LocateIp = (ip: string) =>
     (apiKey: string) => pipe(
-        ipRegex({ exact: true }).test(ip)
-            ? httpGet<IpStackData>(`http://api.ipstack.com/${ip}?access_key=${apiKey}&fields=zip,longitude,latitude,city,country_name,country_code`)
-            : TE.left(new Error('invalid ip address')),
+        checkIp(ip),
+        TE.map(R.tap(console.log)),
+        TE.chain((verifiedIp) => pipe(
+            httpGet<IpStackData>(apiEndpoint(apiKey, verifiedIp)),
+            TE.mapLeft((err) => err.message),
+        )),
         TE.filterOrElse(
             (res) => res.status === 200
                 && !!res.data
                 && !!res.data.latitude
                 && !!res.data.longitude,
-            () => new Error('location could not be determined'),
+            () => 'location could not be determined',
         ),
         TE.map(({ data }) => ({
             lat: data.latitude,

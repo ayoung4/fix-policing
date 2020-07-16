@@ -21,14 +21,14 @@ export type Location = {
     lon: number;
 };
 
-type GetLocation = (ip: string) => RTE.ReaderTaskEither<string, Error, Location>;
+type GetLocation = (ip: string) => RTE.ReaderTaskEither<string, string, Location>;
 
 export const getLocation: GetLocation =
     (ip) => pipe(
         locateIp(ip),
         RTE.filterOrElse(
             (data) => data.country.code === 'us',
-            () => new Error('location not within united states'),
+            () => 'location not within united states',
         ),
         RTE.chain((data) => sequenceT(RTE.readerTaskEither)(
             RTE.fromTaskEither(getCencusArea(data.lat, data.lon)),

@@ -17,13 +17,19 @@ export type CencusAreaResult = {
     results: CencusArea[];
 };
 
-export const getCencusArea = (lat: number, lon: number) => pipe(
+type GetCencusArea = (lat: number, lon: number) => TE.TaskEither<
+    string,
+    CencusArea
+>;
+
+export const getCencusArea: GetCencusArea = (lat, lon) => pipe(
     httpGet<CencusAreaResult>(`https://geo.fcc.gov/api/census/area?lat=${lat}&lon=${lon}`),
+    TE.mapLeft((err) => err.message),
     TE.filterOrElse(
         (res) => res.status === 200
             && !!res.data
             && res.data.results.length > 0,
-        () => new Error('county could not be determined'),
+        () => 'county could not be determined',
     ),
     TE.map((res) => res.data.results),
     TE.map((results) => results[0]),

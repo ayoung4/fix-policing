@@ -1,5 +1,18 @@
 import * as React from 'react';
 import { Icon } from 'semantic-ui-react';
+import {
+    TwitterShareButton,
+    TwitterIcon,
+    FacebookShareButton,
+    FacebookShareCount,
+    FacebookIcon,
+    LinkedinShareButton,
+    LinkedinIcon,
+    RedditShareButton,
+    RedditIcon,
+    TumblrShareButton,
+    TumblrIcon,
+} from 'react-share';
 
 export const SocialBar: React.FC = () => (
     <div style={{
@@ -21,15 +34,40 @@ export const SocialBar: React.FC = () => (
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '16rem',
                 width: '100%',
+                padding: '1rem',
                 backgroundColor: '#EFE91F',
             }}>
-                <Icon name='facebook' size='large' />
-                <br/>
-                <Icon name='twitter' size='large' />
-                <br/>
-                <Icon name='instagram' size='large' />
+                <FacebookShareButton
+                    url={'https://fixpolicing.com'}
+                >
+                    <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <FacebookShareCount
+                    url={'https://fixpolicing.com'}
+                />
+                <TwitterShareButton
+                    url={'https://fixpolicing.com'}
+                >
+                    <TwitterIcon size={32} round />
+                </TwitterShareButton>
+                <LinkedinShareButton
+                    url={'https://fixpolicing.com'}
+                >
+                    <LinkedinIcon size={32} round />
+                </LinkedinShareButton>
+                <RedditShareButton
+                    url={'https://fixpolicing.com'}
+                    windowWidth={660}
+                    windowHeight={460}
+                >
+                    <RedditIcon size={32} round />
+                </RedditShareButton>
+                <TumblrShareButton
+                    url={'https://fixpolicing.com'}
+                >
+                    <TumblrIcon size={32} round />
+                </TumblrShareButton>
             </div>
         </div>
     </div>
