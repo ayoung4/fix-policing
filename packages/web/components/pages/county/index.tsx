@@ -12,11 +12,12 @@ import {
     Grid,
     Segment,
     Image,
+    Responsive,
 } from 'semantic-ui-react';
 
 import { Head } from '../../head';
 import { IncidentCard } from './incident-card';
-import { SocialBar } from './social-bar';
+import { ComputerSocialBar, MobileSocialBar } from './social-bar';
 import { CardCarousel } from './card-carousel';
 import { Footer } from '../../footer';
 import * as S from '../../../styles';
@@ -95,6 +96,21 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                 title={`Fix Policing in ${props.success ? props.county : 'your'} County`}
                 description=''
             />
+            <Responsive {...Responsive.onlyLargeScreen}>
+                <ComputerSocialBar />
+            </Responsive>
+            <Responsive {...Responsive.onlyWidescreen}>
+                <ComputerSocialBar />
+            </Responsive>
+            <Responsive {...Responsive.onlyComputer}>
+                <ComputerSocialBar />
+            </Responsive>
+            <Responsive {...Responsive.onlyTablet}>
+                <MobileSocialBar />
+            </Responsive>
+            <Responsive {...Responsive.onlyMobile}>
+                <MobileSocialBar />
+            </Responsive>
             <Container style={S.concat(S.flexColumn, S.p1y)}>
                 <div style={S.concat(
                     sectionStyle,
@@ -103,7 +119,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                     <Header size='huge' style={S.concat(S.textCenter, S.m1y)}>
                         {makeHeaderText(props)}
                     </Header>
-                    {props.success
+                    {props.success && props.incidents.length > 1
                         ? showIncidents
                             ? (<div style={S.concat(
                                 S.p2y,
@@ -138,15 +154,17 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                                 props.incidents,
                             )} />)
                         : (<div></div>)}
-                    <p style={S.textCenter}>
-                        Please click on any of the names above to view a Google search of their names and the city they were killed in. We encourage you to familiarize yourself with local coverage of each incident.
-                    </p>
                     {props.success && props.incidents.length > 1 && (
-                        <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
-                            {showIncidents
-                                ? 'Collapse Fatal Incidents'
-                                : 'Show All Fatal Incidents'}
-                        </Button>
+                        <div style={S.textCenter}>
+                            <p>
+                                Please click on any of the names above to view a Google search of their names and the city they were killed in. We encourage you to familiarize yourself with local coverage of each incident.
+                            </p>
+                            <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
+                                {showIncidents
+                                    ? 'Collapse Fatal Incidents'
+                                    : 'Show All Fatal Incidents'}
+                            </Button>
+                        </div>
                     )}
                     <p style={S.concat(S.textCenter, S.m2y)}>
                         <a

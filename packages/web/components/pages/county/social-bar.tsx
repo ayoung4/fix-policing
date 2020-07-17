@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import {
     TwitterShareButton,
     TwitterIcon,
@@ -14,7 +14,9 @@ import {
     TumblrIcon,
 } from 'react-share';
 
-export const SocialBar: React.FC = () => (
+import * as S from '../../../styles';
+
+export const ComputerSocialBar: React.FC = () => (
     <div style={{
         position: 'fixed',
         left: 0,
@@ -43,9 +45,6 @@ export const SocialBar: React.FC = () => (
                 >
                     <FacebookIcon size={32} round />
                 </FacebookShareButton>
-                <FacebookShareCount
-                    url={'https://fixpolicing.com'}
-                />
                 <TwitterShareButton
                     url={'https://fixpolicing.com'}
                 >
@@ -71,4 +70,38 @@ export const SocialBar: React.FC = () => (
             </div>
         </div>
     </div>
+);
+
+export const MobileSocialBar: React.FC = () => (
+    <Menu fixed='bottom' size='small' widths={5} style={S.bkYellow}>
+        <Menu.Item>
+            <FacebookShareButton url={'https://fixpolicing.com'}>
+                <FacebookIcon size={32} round />
+            </FacebookShareButton>
+        </Menu.Item>
+        <Menu.Item>
+            <TwitterShareButton url={'https://fixpolicing.com'}>
+                <TwitterIcon size={32} round />
+            </TwitterShareButton>
+        </Menu.Item>
+        <Menu.Item>
+            <LinkedinShareButton url={'https://fixpolicing.com'}>
+                <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
+        </Menu.Item>
+        <Menu.Item>
+            <RedditShareButton
+                url={'https://fixpolicing.com'}
+                windowWidth={660}
+                windowHeight={460}
+            >
+                <RedditIcon size={32} round />
+            </RedditShareButton>
+        </Menu.Item>
+        <Menu.Item>
+            <TumblrShareButton url={'https://fixpolicing.com'}>
+                <TumblrIcon size={32} round />
+            </TumblrShareButton>
+        </Menu.Item>
+    </Menu>
 );
