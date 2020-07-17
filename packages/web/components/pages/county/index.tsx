@@ -22,6 +22,7 @@ import { ComputerSocialBar, MobileSocialBar } from './social-bar';
 import { CardCarousel } from './card-carousel';
 import { Footer } from '../../footer';
 import * as S from '../../../styles';
+import { Global } from '../../../context';
 
 export type CountyPageProps = {
     success: true;
@@ -64,7 +65,7 @@ const sectionStyle = S.concat(
 );
 
 const getWidth = () => typeof window === 'undefined'
-    ? Number(Responsive.onlyTablet.minWidth)
+    ? Number(Responsive.onlyComputer.minWidth)
     : window.innerWidth;
 
 export const CountyPage: React.FC<CountyPageProps> = (props) => {
@@ -78,21 +79,11 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                 description=''
             />
             <Container style={S.concat(S.flexColumn, S.p1y)}>
-                <Responsive {...{ ...Responsive.onlyWidescreen, getWidth }}>
-                    <ComputerSocialBar />
-                </Responsive>
-                <Responsive {...{ ...Responsive.onlyLargeScreen, getWidth }}>
-                    <ComputerSocialBar />
-                </Responsive>
-                <Responsive {...{ ...Responsive.onlyComputer, getWidth }}>
-                    <ComputerSocialBar />
-                </Responsive>
-                <Responsive {...{ ...Responsive.onlyTablet, getWidth }}>
-                    <MobileSocialBar />
-                </Responsive>
-                <Responsive {...{ ...Responsive.onlyMobile, getWidth }}>
-                    <MobileSocialBar />
-                </Responsive>
+                <Global.Consumer>
+                    {({ layout }) => layout.mobile
+                        ? (<MobileSocialBar />)
+                        : (<ComputerSocialBar />)}
+                </Global.Consumer>
                 <div style={S.concat(
                     sectionStyle,
                     S.vh100,
