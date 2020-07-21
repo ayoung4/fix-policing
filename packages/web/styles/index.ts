@@ -42,6 +42,14 @@ export const p5y: CSSProperties = {
     paddingBottom: `${base * 5}rem`,
 };
 
+export const p2: CSSProperties = concat(
+    p2y,
+    {
+        paddingLeft: `${base * 2}rem`,
+        paddingRight: `${base * 2}rem`,
+    },
+);
+
 export const m1y: CSSProperties = {
     marginTop: `${base}rem`,
     marginBottom: `${base}rem`,

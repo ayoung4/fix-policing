@@ -2,7 +2,7 @@ import * as T from 'fp-ts/lib/Task';
 import * as TE from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
 import { sequenceT } from 'fp-ts/lib/Apply';
-
+import { Incident, Election, Candidate } from '@fix-policing/shared';
 import * as R from 'ramda';
 import * as _ from 'lodash';
 import { GetStaticProps, GetStaticPaths } from 'next';
@@ -10,7 +10,6 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import { capitalizeAll } from '../../modules/util';
 import { getDb } from '../../modules/db';
 import { CountyPage, CountyPageProps } from '../../components/pages/county';
-import { Incident, Election, Candidate } from '@fix-policing/shared';
 
 type Params = {
     state: string;

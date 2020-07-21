@@ -11,21 +11,28 @@
     "@fix-policing/shared": "1.0.3",
     "@morphic-ts/batteries": "^2.0.0-alpha.7",
     "axios": "^0.19.2",
+    "formik": "^2.1.5",
     "fp-ts": "^2.6.6",
     "ip-regex": "^4.1.0",
+    "jsonp": "^0.2.1",
     "moment": "^2.27.0",
     "next": "9.4.4",
     "ramda": "^0.27.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-ga": "^3.1.2",
     "react-share": "^4.2.1",
     "semantic-ui-react": "^0.88.2",
-    "utility-types": "^3.10.0"
+    "to-querystring": "^1.1.0",
+    "utility-types": "^3.10.0",
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@types/node": "^14.0.13",
     "@types/ramda": "^0.27.6",
     "@types/react": "^16.9.36",
+    "@types/react-ga": "^2.3.0",
+    "@types/yup": "^0.29.3",
     "typescript": "^3.9.5"
   }
 }

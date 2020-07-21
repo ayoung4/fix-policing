@@ -3,7 +3,11 @@ import { Incident, Election, Candidate } from '@fix-policing/shared';
 import * as React from 'react';
 import * as R from 'ramda';
 import * as _ from 'lodash';
+import * as T from 'fp-ts/lib/Task';
+import * as TE from 'fp-ts/lib/TaskEither';
 import moment from 'moment';
+import toQueryString from 'to-querystring';
+import * as Yup from 'yup';
 import {
     Header,
     Card,
@@ -23,6 +27,10 @@ import { CardCarousel } from './card-carousel';
 import { Footer } from '../../footer';
 import * as S from '../../../styles';
 import { Global } from '../../../context';
+import { MailingListSignupForm } from '../../mailing-list-signup-form';
+import { Formik } from 'formik';
+import { httpJsonpPost } from '../../../modules/util';
+import { pipe } from 'fp-ts/lib/function';
 
 export type CountyPageProps = {
     success: true;
@@ -42,7 +50,7 @@ export type CountyPageProps = {
 const makeHeaderText = (props: CountyPageProps) =>
     props.success
         ? (<span>
-            Since 2015, there { props.incidents.length === 1 ? 'has' : 'have'} been &nbsp;
+            Since 2015, there { props.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
             <span style={{ color: props.incidents.length > 0 ? 'red' : undefined }}>{props.incidents.length} fatal shooting{props.incidents.length === 1 ? '' : 's'}</span> by
             a police officer in the line of duty in { props.county} County, { props.state}.
         </span>)
@@ -64,9 +72,21 @@ const sectionStyle = S.concat(
     S.flexColumn,
 );
 
-const getWidth = () => typeof window === 'undefined'
-    ? Number(Responsive.onlyComputer.minWidth)
-    : window.innerWidth;
+const makeSubscribeUrl = (params: string) =>
+    `https://fixpolicing.us10.list-manage.com/subscribe/post-json?u=65b71f37cd14ab1785056d3aa&amp;id=b337ec4fa8&${params}`;
+
+type MailchimpResponse = {
+    result: 'success' | 'error';
+    msg: string;
+};
+
+const submitMailingList = (data: { EMAIL: string; }) =>
+    pipe(
+        data,
+        toQueryString,
+        makeSubscribeUrl,
+        (url) => httpJsonpPost({ param: 'c' })<Error, MailchimpResponse>(url),
+    );
 
 export const CountyPage: React.FC<CountyPageProps> = (props) => {
 
@@ -271,6 +291,43 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                             />
                         </Grid.Column>
                     </Grid>
+                </div>
+                <div style={S.concat(
+                    sectionStyle,
+                    { minHeight: '16rem' },
+                    S.p2,
+                )}>
+                    <div style={S.concat(
+                        S.flexColumn,
+                        { display: 'flex' },
+                    )}>
+                        <Header textAlign='center'>Join our mailing list for updates on future elections.</Header>
+                        <Formik
+                            initialValues={{ email: '' }}
+                            onSubmit={({ email }, form) => pipe(
+                                submitMailingList({ EMAIL: email }),
+                                TE.filterOrElse(
+                                    (res) => res.result === 'success',
+                                    (res) => !!res.msg.match('is already subscribed')
+                                        ? new Error(res.msg.split('<')[0])
+                                        : new Error(res.msg),
+                                ),
+                                TE.fold(
+                                    (err: Error) => T.of(err.message),
+                                    (res) => T.of(res.msg),
+                                ),
+                                T.map(form.setStatus),
+                                T.map(() => form.setSubmitting(false)),
+                            )()}
+                            validationSchema={Yup.object<{ email: string; }>({
+                                email: Yup.string()
+                                    .email('Please provide a valid email address')
+                                    .required('Please provide a valid email address'),
+                            })}
+                        >
+                            {(form) => <MailingListSignupForm {...form} />}
+                        </Formik>
+                    </div>
                 </div>
             </Container>
             <Segment inverted vertical style={S.p3y}>

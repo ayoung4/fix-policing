@@ -5,7 +5,6 @@ import * as RD from '@devexperts/remote-data-ts';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import { pipe, flow, identity } from 'fp-ts/lib/function';
 import * as T from 'fp-ts/lib/Task';
-import * as E from 'fp-ts/lib/Either';
 import * as TE from 'fp-ts/lib/TaskEither';
 
 import * as S from '../../../styles';
