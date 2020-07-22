@@ -7,9 +7,9 @@ import * as R from 'ramda';
 import * as _ from 'lodash';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
-import { capitalizeAll } from '../../modules/util';
-import { getDb } from '../../modules/db';
-import { CountyPage, CountyPageProps } from '../../components/pages/county';
+import { capitalizeAll } from '../../../modules/util';
+import { getDb } from '../../../modules/db';
+import { CountyPage, CountyPageProps } from '../../../components/pages/county';
 
 type Params = {
     state: string;
