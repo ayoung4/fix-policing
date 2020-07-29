@@ -22,6 +22,11 @@ export const Nav: React.FC<NavProps> = ({ fixed }) => (
             </Menu.Item>
         </Link>
         <Menu.Menu position='right'>
+            <Link href='/directory'>
+                <Menu.Item as='a'>
+                    Directory
+                </Menu.Item>
+            </Link>
             <Link href='/about'>
                 <Menu.Item as='a'>
                     About

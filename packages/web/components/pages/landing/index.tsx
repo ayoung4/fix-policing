@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import * as RD from '@devexperts/remote-data-ts';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
-import { pipe, flow, identity } from 'fp-ts/lib/function';
+import { pipe, identity } from 'fp-ts/lib/function';
 import * as T from 'fp-ts/lib/Task';
 import * as TE from 'fp-ts/lib/TaskEither';
 
@@ -23,7 +23,7 @@ type State = RD.RemoteData<string, Location>;
 
 const renderButton = RD.fold<string, Location, React.ReactElement>(
     () => (
-        <div>
+        <div style={S.concat(S.w100, S.m2x)}>
             <Button
                 color='blue'
                 fluid
@@ -32,10 +32,12 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
             >
                 Let's Find Out
             </Button>
+            <p style={S.concat(S.textCenter, S.m1y)}>
+            </p>
         </div>
     ),
     () => (
-        <div>
+        <div style={S.concat(S.w100, S.m2x)}>
             <Button
                 color='blue'
                 fluid
@@ -51,15 +53,16 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
         </div>
     ),
     (err) => (
-        <div>
-            <Button
-                color='blue'
-                fluid
-                size='large'
-                disabled
-            >
-                Let's Find Out
+        <div style={S.concat(S.w100, S.m2x)}>
+            <Link href='/directory'>
+                <Button
+                    color='blue'
+                    fluid
+                    size='large'
+                >
+                    Use Our Directory To Find Your County
             </Button>
+            </Link>
             <p style={S.concat(S.textCenter, S.m1y)}>
                 <Icon name='map marker alternate' color='red' />
                 An error occured while trying to determine your location: {err}
@@ -67,7 +70,7 @@ const renderButton = RD.fold<string, Location, React.ReactElement>(
         </div>
     ),
     ({ countyPageLink, countyName, stateCode }) => (
-        <div>
+        <div style={S.concat(S.w100, S.m2x)}>
             <Link href={countyPageLink}>
                 <Button
                     color='blue'
@@ -117,10 +120,12 @@ export const LandingPage: NextPage = () => {
 
     return (
         <div style={S.bkYellow}>
-            <Head
-                title='Fix Policing'
-                description={`How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`}
-            />
+            <Head>
+                <title>Fix Policing</title>
+                <meta key='description' name='description' content={`How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`} />
+                <meta property='og:title' content='Fix Policing' key='title' />
+                <meta property='og:description' content={`How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`} />
+            </Head>
             <Container style={S.concat(S.flexColumn, S.p1y, S.vh100)}>
                 <Nav />
                 <div style={S.concat(

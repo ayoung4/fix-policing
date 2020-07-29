@@ -5,6 +5,7 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": false,
+    "jsx": "react",
     "outDir": "lib"
   },
   "include": [

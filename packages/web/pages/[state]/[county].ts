@@ -7,9 +7,9 @@ import * as R from 'ramda';
 import * as _ from 'lodash';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
-import { capitalizeAll } from '../../../modules/util';
-import { getDb } from '../../../modules/db';
-import { CountyPage, CountyPageProps } from '../../../components/pages/county';
+import { capitalizeAll } from '../../modules/util';
+import { getDb } from '../../modules/db';
+import { CountyPage, CountyPageProps } from '../../components/pages/county';
 
 type Params = {
     state: string;
@@ -24,9 +24,9 @@ const makeGoogleSearch = (query: string) =>
         R.concat('https://www.google.com/search?q='),
     );
 
-const getProps = (state, county) => pipe(
+const getProps = (reqState, reqCounty) => pipe(
     getDb,
-    TE.map((db) => db[state]),
+    TE.map((db) => db[reqState]),
     TE.chain((x) => !!x
         ? pipe(
             sequenceT(TE.taskEitherSeq)(
@@ -34,7 +34,7 @@ const getProps = (state, county) => pipe(
                 pipe(
                     TE.right(x),
                     TE.map((x) => R.find(
-                        ({ name }) => name === county,
+                        ({ name }) => name === reqCounty,
                         x.counties,
                     )),
                 ),
@@ -52,10 +52,8 @@ const getProps = (state, county) => pipe(
                                         name: capitalizeAll(c.name),
                                         imageLink: !!c.imageLink
                                             ? c.imageLink
-                                            : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
-                                        websiteLink: !!c.websiteLink
-                                            ? c.websiteLink
-                                            : makeGoogleSearch(`${c.name} ${county.name} county ${state.name}`)
+                                            : '',
+                                        websiteLink: makeGoogleSearch(`${c.name} ${county.name} ${state.name}`)
                                     }),
                                     e.candidates,
                                 )
@@ -64,7 +62,14 @@ const getProps = (state, county) => pipe(
                         ),
                         registration: state.registration,
                         state: capitalizeAll(state.name),
-                        county: capitalizeAll(county.name),
+                        stateCode: abbrState(state.name, 'abbr'),
+                        county: capitalizeAll(`${county.name} ${
+                            state.name === 'alaska'
+                                ? 'borough'
+                                : state.name === 'louisiana'
+                                    ? 'parish'
+                                    : 'county'
+                            }`),
                         incidents: R.map<Incident, Incident>(
                             (i) => ({
                                 ...i,
@@ -117,5 +122,77 @@ export const getStaticPaths: GetStaticPaths<Params> = pipe(
         (paths) => T.of({ paths, fallback: true }),
     ),
 );
+
+function abbrState(input, to) {
+
+    var states = [
+        ['Arizona', 'AZ'],
+        ['Alabama', 'AL'],
+        ['Alaska', 'AK'],
+        ['Arkansas', 'AR'],
+        ['California', 'CA'],
+        ['Colorado', 'CO'],
+        ['Connecticut', 'CT'],
+        ['Delaware', 'DE'],
+        ['Florida', 'FL'],
+        ['Georgia', 'GA'],
+        ['Hawaii', 'HI'],
+        ['Idaho', 'ID'],
+        ['Illinois', 'IL'],
+        ['Indiana', 'IN'],
+        ['Iowa', 'IA'],
+        ['Kansas', 'KS'],
+        ['Kentucky', 'KY'],
+        ['Louisiana', 'LA'],
+        ['Maine', 'ME'],
+        ['Maryland', 'MD'],
+        ['Massachusetts', 'MA'],
+        ['Michigan', 'MI'],
+        ['Minnesota', 'MN'],
+        ['Mississippi', 'MS'],
+        ['Missouri', 'MO'],
+        ['Montana', 'MT'],
+        ['Nebraska', 'NE'],
+        ['Nevada', 'NV'],
+        ['New Hampshire', 'NH'],
+        ['New Jersey', 'NJ'],
+        ['New Mexico', 'NM'],
+        ['New York', 'NY'],
+        ['North Carolina', 'NC'],
+        ['North Dakota', 'ND'],
+        ['Ohio', 'OH'],
+        ['Oklahoma', 'OK'],
+        ['Oregon', 'OR'],
+        ['Pennsylvania', 'PA'],
+        ['Rhode Island', 'RI'],
+        ['South Carolina', 'SC'],
+        ['South Dakota', 'SD'],
+        ['Tennessee', 'TN'],
+        ['Texas', 'TX'],
+        ['Utah', 'UT'],
+        ['Vermont', 'VT'],
+        ['Virginia', 'VA'],
+        ['Washington', 'WA'],
+        ['West Virginia', 'WV'],
+        ['Wisconsin', 'WI'],
+        ['Wyoming', 'WY'],
+    ];
+
+    if (to == 'abbr') {
+        input = input.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+        for (let i = 0; i < states.length; i++) {
+            if (states[i][0] == input) {
+                return (states[i][1]);
+            }
+        }
+    } else if (to == 'name') {
+        input = input.toUpperCase();
+        for (let i = 0; i < states.length; i++) {
+            if (states[i][1] == input) {
+                return (states[i][0]);
+            }
+        }
+    }
+}
 
 export default CountyPage;

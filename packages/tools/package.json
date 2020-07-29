@@ -8,18 +8,27 @@
     "compile": "tsc -p tsconfig.json",
     "build": "npm run clean && npm run compile",
     "create-db": "npm run build && node ./lib/create-db.js",
-    "elections": "npm run build && node ./lib/elections.js"
+    "create-og-images": "npm run build && node ./lib/create-og-images/index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/lodash": "^4.14.155",
+    "@types/puppeteer": "^3.0.1",
     "@types/ramda": "^0.27.6",
+    "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
     "typescript": "^3.9.5"
   },
   "dependencies": {
     "fp-ts": "^2.6.6",
+    "fp-ts-contrib": "^0.1.17",
     "lodash": "^4.17.15",
-    "ramda": "^0.27.0"
+    "puppeteer": "^5.2.1",
+    "puppeteer-cluster": "^0.21.0",
+    "ramda": "^0.27.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "semantic-ui-react": "^1.0.0"
   }
 }

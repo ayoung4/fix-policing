@@ -6,17 +6,22 @@ export const Footer: React.FC = () => (
     <Grid divided inverted stackable>
         <Grid.Row>
             <Grid.Column width={3}>
-                <Header inverted as='h5' content='fixpolicing.com' />
+                <Header inverted as='h5' content='Site' />
                 <List link inverted>
                     <Link href='/'>
                         <List.Item as='a'>
                             Home
-                    </List.Item>
+                        </List.Item>
                     </Link>
                     <Link href='/about'>
                         <List.Item as='a'>
                             About
-                    </List.Item>
+                        </List.Item>
+                    </Link>
+                    <Link href='/directory'>
+                        <List.Item as='a'>
+                            Directory
+                        </List.Item>
                     </Link>
                     <List.Item
                         as='a'
@@ -24,11 +29,11 @@ export const Footer: React.FC = () => (
                         target='_blank'
                     >
                         Github
-                </List.Item>
+                    </List.Item>
                 </List>
             </Grid.Column>
             <Grid.Column width={5}>
-                <Header inverted as='h5' content='external links' />
+                <Header inverted as='h5' content='External Links' />
                 <List link inverted>
                     <List.Item
                         as='a'

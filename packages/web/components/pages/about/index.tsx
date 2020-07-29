@@ -12,10 +12,7 @@ export const AboutPage: NextPage = () => (
         backgroundColor: '#EFE91F',
         position: 'relative',
     }}>
-        <Head
-            title='About Fix Policing'
-            description=''
-        />
+        <Head />
         <Container style={{ maxWidth: '40rem' }}>
             <div style={{
                 display: 'flex',

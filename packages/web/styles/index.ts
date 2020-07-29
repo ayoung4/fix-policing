@@ -50,6 +50,16 @@ export const p2: CSSProperties = concat(
     },
 );
 
+export const m1x: CSSProperties = {
+    marginLeft: `${base}rem`,
+    marginRight: `${base}rem`,
+};
+
+export const m2x: CSSProperties = {
+    marginLeft: `${base * 2}rem`,
+    marginRight: `${base * 2}rem`,
+};
+
 export const m1y: CSSProperties = {
     marginTop: `${base}rem`,
     marginBottom: `${base}rem`,
@@ -178,6 +188,10 @@ export const vh100: CSSProperties = {
 
 export const h100: CSSProperties = {
     minHeight: '100%',
+};
+
+export const w100: CSSProperties = {
+    width: '100%',
 };
 
 export const bordered: CSSProperties = {

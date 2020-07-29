@@ -11,12 +11,14 @@ export declare type Incident = {
     age: number;
     gender: string;
     race: string;
+    state: string;
     mentalIllness: boolean;
     threat: string;
     fleeing: boolean;
     bodyCamera: boolean;
     city: string;
     link?: string;
+    county: string;
 };
 export declare type Election = {
     state: string;
