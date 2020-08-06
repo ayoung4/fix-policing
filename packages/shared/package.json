@@ -1,6 +1,6 @@
 {
   "name": "@fix-policing/shared",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "private": false,
   "description": "",
   "main": "lib/index.js",
@@ -15,5 +15,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }

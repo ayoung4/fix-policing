@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@devexperts/remote-data-ts": "^2.0.3",
-    "@fix-policing/shared": "1.0.3",
+    "@fix-policing/shared": "^1.0.6",
     "@morphic-ts/batteries": "^2.0.0-alpha.7",
     "axios": "^0.19.2",
     "formik": "^2.1.5",

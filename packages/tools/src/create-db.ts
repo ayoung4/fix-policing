@@ -33,6 +33,10 @@ const tool = pipe(
                         deadline,
                         link,
                     } as RegistrationData,
+                    incidents: R.filter(
+                        (i) => i.state === abbreviateState(state).toLowerCase(),
+                        incidents,
+                    ),
                     counties: R.reduce(
                         (acc, { county }: any) => [
                             ...acc,

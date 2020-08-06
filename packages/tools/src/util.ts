@@ -1,5 +1,6 @@
+import { Incident } from '@fix-policing/shared';
+
 import * as TE from 'fp-ts/lib/TaskEither';
-import * as IO from 'fp-ts/lib/IO';
 import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/function';
 
@@ -148,7 +149,7 @@ export const readIncidents = pipe(
         fleeing: Boolean(fleeing),
         bodyCamera: Boolean(bodyCamera),
         county: county || '',
-    }))),
+    }) as Incident)),
 );
 
 // elections.tsv format:

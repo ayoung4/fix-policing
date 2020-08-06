@@ -24,6 +24,14 @@ const makeGoogleSearch = (query: string) =>
         R.concat('https://www.google.com/search?q='),
     );
 
+const toFilename = (s: string) => R.replace(/\s/g, '-', s);
+
+const openGraphImageLink = (county: string, state: string) =>
+    toFilename(`http://fixpolicing.com/open-graph/${state.toLowerCase()}-${county.toLowerCase()}.png`);
+
+const secureOpenGraphImageLink = (county: string, state: string) =>
+    toFilename(`https://fixpolicing.com/open-graph/${state.toLowerCase()}-${county.toLowerCase()}.png`);
+
 const getProps = (reqState, reqCounty) => pipe(
     getDb,
     TE.map((db) => db[reqState]),
@@ -43,40 +51,56 @@ const getProps = (reqState, reqCounty) => pipe(
                 !!county
                     ? TE.right({
                         ...county,
-                        elections: R.map<Election, Election>(
-                            (e) => ({
-                                ...e,
-                                type: capitalizeAll(e.type),
-                                candidates: R.map<Candidate, Candidate>(
-                                    (c) => ({
-                                        name: capitalizeAll(c.name),
-                                        imageLink: !!c.imageLink
-                                            ? c.imageLink
-                                            : '',
-                                        websiteLink: makeGoogleSearch(`${c.name} ${county.name} ${state.name}`)
-                                    }),
-                                    e.candidates,
-                                )
-                            }),
-                            county.elections,
-                        ),
-                        registration: state.registration,
-                        state: capitalizeAll(state.name),
-                        stateCode: abbrState(state.name, 'abbr'),
-                        county: capitalizeAll(`${county.name} ${
-                            state.name === 'alaska'
-                                ? 'borough'
-                                : state.name === 'louisiana'
-                                    ? 'parish'
-                                    : 'county'
-                            }`),
-                        incidents: R.map<Incident, Incident>(
-                            (i) => ({
-                                ...i,
-                                link: makeGoogleSearch(`${i.name} ${county.name}`),
-                            }),
-                            county.incidents,
-                        ),
+                        state: {
+                            registration: state.registration,
+                            name: capitalizeAll(state.name),
+                            code: abbrState(state.name, 'abbr'),
+                            incidents: R.map<Incident, Incident>(
+                                (i) => ({
+                                    ...i,
+                                    link: makeGoogleSearch(`${i.name} ${i.county}`),
+                                }),
+                                state.incidents,
+                            ),
+                        },
+                        county: {
+                            name: capitalizeAll(`${county.name} ${
+                                state.name === 'alaska'
+                                    ? 'borough'
+                                    : state.name === 'louisiana'
+                                        ? 'parish'
+                                        : 'county'
+                                }`),
+                            incidents: R.map<Incident, Incident>(
+                                (i) => ({
+                                    ...i,
+                                    link: makeGoogleSearch(`${i.name} ${county.name}`),
+                                }),
+                                county.incidents,
+                            ),
+                            elections: R.map<Election, Election>(
+                                (e) => ({
+                                    ...e,
+                                    type: capitalizeAll(e.type),
+                                    candidates: R.map<Candidate, Candidate>(
+                                        (c) => ({
+                                            name: capitalizeAll(c.name),
+                                            imageLink: !!c.imageLink
+                                                ? c.imageLink
+                                                : '',
+                                            websiteLink: makeGoogleSearch(`${c.name} ${county.name} ${state.name}`)
+                                        }),
+                                        e.candidates,
+                                    ),
+                                }),
+                                county.elections,
+                            ),
+                        },
+                        sharable: {
+                            link: `${state.name.toLowerCase()}/${county.name.toLowerCase()}`,
+                            image: openGraphImageLink(county.name, state.name),
+                            secureImage: secureOpenGraphImageLink(county.name, state.name),
+                        },
                     })
                     : TE.left(new Error('the county is either missing from the database or misspelled')),
             ),
@@ -118,8 +142,8 @@ export const getStaticPaths: GetStaticPaths<Params> = pipe(
         R.toPairs(db),
     )),
     TE.fold(
-        () => T.of({ paths: [], fallback: true }),
-        (paths) => T.of({ paths, fallback: true }),
+        () => T.of({ paths: [], fallback: false }),
+        (paths) => T.of({ paths, fallback: false }),
     ),
 );
 

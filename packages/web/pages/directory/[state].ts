@@ -68,8 +68,8 @@ export const getStaticPaths: GetStaticPaths<Params> = pipe(
         R.map((state) => ({ params: { state } })),
     )),
     TE.fold(
-        () => T.of({ paths: [], fallback: true }),
-        (paths) => T.of({ paths, fallback: true }),
+        () => T.of({ paths: [], fallback: false }),
+        (paths) => T.of({ paths, fallback: false }),
     ),
 );
 

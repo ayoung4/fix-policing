@@ -21,7 +21,7 @@ import {
 import { VotingGridItem } from './voting-grid-item';
 import { Head } from '../../head';
 import { IncidentCard } from './incident-card';
-import { ComputerSocialBar, MobileSocialBar } from './social-bar';
+import { ComputerSocialBar, MobileSocialBar, InlineSocialBar } from './social-bar';
 import { CardCarousel } from './card-carousel';
 import { Footer } from '../../footer';
 import * as S from '../../../styles';
@@ -33,15 +33,25 @@ import { pipe } from 'fp-ts/lib/function';
 
 export type CountyPageProps = {
     success: true;
-    county: string;
-    state: string;
-    stateCode: string;
-    registration: {
-        deadline: string;
+    state: {
+        name: string;
+        code: string;
+        incidents: Incident[];
+        registration: {
+            deadline: string;
+            link: string;
+        };
+    };
+    county: {
+        name: string;
+        incidents: Incident[];
+        elections: Election[];
+    };
+    sharable: {
+        image: string;
+        secureImage: string;
         link: string;
     };
-    incidents: Incident[],
-    elections: Election[],
 } | {
     success: false;
     reason: string;
@@ -49,11 +59,17 @@ export type CountyPageProps = {
 
 const makeHeaderText = (props: CountyPageProps) =>
     props.success
-        ? (<span>
-            Since 2015, there {props.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
-            <span style={props.incidents.length > 0 ? { color: 'red', textDecoration: 'underline' } : {}}>{props.incidents.length} fatal encounter{props.incidents.length === 1 ? '' : 's'}</span> with
-            police officers in the line of duty in { props.county}, { props.state}.
-        </span>)
+        ? props.county.incidents.length > 0
+            ? (<span>
+                Since 2015, there {props.county.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
+                <span style={props.county.incidents.length > 0 ? { color: 'red', textDecoration: 'underline' } : {}}>{props.county.incidents.length} fatal encounter{props.county.incidents.length === 1 ? '' : 's'}</span> with
+            police officers in the line of duty in {props.county.name}, {props.state.name}.
+            </span>)
+            : (<span>
+                Since 2015, there {props.state.incidents.length === 1 ? 'has' : 'have'} been&nbsp;
+                <span style={props.state.incidents.length > 0 ? { color: 'red', textDecoration: 'underline' } : {}}>{props.state.incidents.length} fatal encounter{props.state.incidents.length === 1 ? '' : 's'}</span> with
+                police officers in the line of duty in {props.state.name}.
+            </span>)
         : (<span>
             We weren't able to look up your county in our database.
             Please copy and paste this url from your browser and
@@ -62,9 +78,28 @@ const makeHeaderText = (props: CountyPageProps) =>
         </span>);
 
 const makeElectionsHeader = (props: CountyPageProps) =>
-    props.success && props.elections.length > 0
-        ? 'These are the upcoming sherriff, CA, DA and judge elections in your county:'
-        : 'There are no upcoming sherriff, CA, DA or judge elections in your county recorded in our database.';
+    props.success && props.county.elections.length > 0
+        ? (
+            <Header size='large' style={S.concat(
+                S.textCenter,
+                S.m1y,
+                { maxWidth: '40rem' }
+            )}>
+                These are the upcoming sherriff, CA, DA and judge elections in your county:
+            </Header>
+        )
+        : (
+            <Header style={S.concat(
+                S.textCenter,
+                S.m1y,
+                { maxWidth: '40rem' }
+            )}>
+                While there are no upcoming sherriff, CA, DA or judge elections in your county recorded in our database,&nbsp;
+                <span style={{ color: 'red', textDecoration: 'underline' }}>
+                    there are other local elections as well as state and national elections taking place on November 3rd.
+                </span>&nbsp;Make your voice heard by voting and push elected officials to hold law enforcement accountable.
+            </Header>
+        );
 
 const sectionStyle = S.concat(
     S.alignItemsCenter,
@@ -88,14 +123,6 @@ const submitMailingList = (data: { EMAIL: string; }) =>
         (url) => httpJsonpPost({ param: 'c' })<Error, MailchimpResponse>(url),
     );
 
-const toFilename = (s: string) => R.replace(/\s/g, '-', s);
-
-const openGraphImageLink = (county: string, state: string) =>
-    toFilename(`http://fixpolicing.com/open-graph/${state.toLowerCase()}-${county.toLowerCase()}.png`);
-
-const secureOpenGraphImageLink = (county: string, state: string) =>
-    toFilename(`https://fixpolicing.com/open-graph/${state.toLowerCase()}-${county.toLowerCase()}.png`);
-
 export const CountyPage: React.FC<CountyPageProps> = (props) => {
 
     const [showIncidents, setShowIncidents] = React.useState(false);
@@ -104,55 +131,55 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
         <div>
             <Head>
                 {props.success
-                    ? (<title>{`Fix Policing in ${props.county}, ${props.stateCode}`}</title>)
+                    ? (<title>{`Fix Policing in ${props.county.name}, ${props.state.code}`}</title>)
                     : (<title>Fix Policing</title>)}
                 <meta key='description' name='description' content={props.success
-                    ? `How's policing in ${props.county}, ${props.stateCode}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
+                    ? `How's policing in ${props.county.name}, ${props.state.code}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                     : `How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                 } />
                 <meta property='og:title' content={props.success
-                    ? `Fix Policing in ${props.county}, ${props.stateCode}`
+                    ? `Fix Policing in ${props.county.name}, ${props.state.code}`
                     : 'Fix Policing'
                 } />
                 <meta property='og:type' content='website' />
                 <meta property='og:locale' content='en_US' />
                 <meta property='og:site_name' content='Fix Policing' />
                 <meta property='og:description' content={props.success
-                    ? `How's policing in ${props.county}, ${props.stateCode}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
+                    ? `How's policing in ${props.county.name}, ${props.state.code}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                     : `How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                 } />
                 {props.success && (
-                    <meta property='og:image:secure_url' content={secureOpenGraphImageLink(props.county, props.state)} />
+                    <meta property='og:image:secure_url' content={props.sharable.secureImage} />
                 )}
                 {props.success && (
-                    <meta property='og:image' content={openGraphImageLink(props.county, props.state)} />
+                    <meta property='og:image' content={props.sharable.image} />
                 )}
                 <meta property='og:image:type' content='image/png' />
                 <meta property='og:image:width' content='1200' />
                 <meta property='og:image:height' content='630' />
-                {props.success && props.incidents.length > 0 && (
-                    <meta property='og:image:alt' content={`Since 2015, there have been ${props.incidents.length} fatal encounters with police officers in the line of duty in ${props.county}, ${props.stateCode}.`} />
+                {props.success && props.county.incidents.length > 0 && (
+                    <meta property='og:image:alt' content={`Since 2015, there have been ${props.county.incidents.length} fatal encounters with police officers in the line of duty in ${props.county.name}, ${props.state.code}.`} />
                 )}
                 <meta name='twitter:card' content='summary_large_image' />
                 <meta name='twitter:title' content={props.success
-                    ? `Fix Policing in ${props.county} county, ${props.stateCode}`
+                    ? `Fix Policing in ${props.county.name}, ${props.state.code}`
                     : 'Fix Policing'
                 } />
                 <meta name='twitter:description' content={props.success
-                    ? `How's policing in ${props.county}, ${props.stateCode}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
+                    ? `How's policing in ${props.county.name}, ${props.state.code}? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                     : `How's policing in your community? Learn about about fatal encounters with police in your county and what you can do to hold local officials accountable.`
                 } />
                 <meta name='twitter:site' content='@fixpolicing' />
                 <meta name='twitter:creator' content='@fixpolicing' />
-                {props.success && props.incidents.length > 0 && (
-                    <meta name='twitter:image' content={secureOpenGraphImageLink(props.county, props.state)} />
+                {props.success && props.county.incidents.length > 0 && (
+                    <meta name='twitter:image' content={props.sharable.secureImage} />
                 )}
             </Head>
             <Container style={S.concat(S.flexColumn, S.p1y)}>
                 {props.success && (<Global.Consumer>
-                    {({ layout }) => layout.mobile
-                        ? (<MobileSocialBar path={`${props.state.toLowerCase()}/${props.county.toLowerCase()}`} />)
-                        : (<ComputerSocialBar path={`${props.state.toLowerCase()}/${props.county.toLowerCase()}`} />)}
+                    {({ layout }) => layout.mobile && (
+                        <MobileSocialBar path={props.sharable.link} />
+                    )}
                 </Global.Consumer>)}
                 <div style={S.concat(
                     sectionStyle,
@@ -167,7 +194,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                     />
                     {props.success && (
                         <Header size='huge' style={S.concat(S.textCenter, S.m1y)}>
-                            {props.county}, {props.stateCode}
+                            {props.county.name}, {props.state.code}
                         </Header>
                     )}
                     <Header style={S.concat(
@@ -177,7 +204,14 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                     )}>
                         {makeHeaderText(props)}
                     </Header>
-                    {props.success && props.incidents.length > 0
+                    {props.success && (<InlineSocialBar path={props.sharable.link} />)}
+                    <p style={S.concat(
+                        S.textCenter,
+                        { maxWidth: '32rem' },
+                    )}>
+                        <b>Surprised? Share this information with your community.</b>&nbsp;We can't change these figures in the future if we don't know them today.
+                    </p>
+                    {props.success
                         ? showIncidents
                             ? (<div style={S.concat(
                                 S.p2y,
@@ -194,12 +228,14 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                                                 cause={incident.cause}
                                                 race={incident.race}
                                                 gender={incident.gender}
-                                                state={props.state}
+                                                state={props.state.name}
                                                 link={incident.link}
                                                 date={incident.date}
                                             />
                                         ),
-                                        props.incidents,
+                                        props.county.incidents.length > 0
+                                            ? props.county.incidents
+                                            : props.state.incidents,
                                     )}
                                 </Card.Group>
                                 <br />
@@ -207,12 +243,14 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                             : (<CardCarousel incidentCards={R.map(
                                 (incident: Incident) => ({
                                     ...incident,
-                                    state: props.state,
+                                    state: props.state.name,
                                 }),
-                                props.incidents,
+                                props.county.incidents.length > 0
+                                    ? props.county.incidents
+                                    : props.state.incidents,
                             )} />)
                         : (<div></div>)}
-                    {props.success && props.incidents.length > 0
+                    {props.success
                         ? (
                             <div style={S.concat(
                                 S.textCenter,
@@ -221,13 +259,15 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                                 <p>
                                     Please click on any of the names above to view a Google search of their names and the city they were killed in. We encourage you to familiarize yourself with local coverage of each incident.
                             </p>
-                                {props.incidents.length > 1 && (
-                                    <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
-                                        {showIncidents
-                                            ? 'Collapse Fatal Incidents'
-                                            : 'Show All Fatal Incidents'}
-                                    </Button>
-                                )}
+                                {(props.county.incidents.length > 0
+                                    || props.state.incidents.length > 0)
+                                    && (
+                                        <Button color='blue' onClick={() => setShowIncidents(!showIncidents)}>
+                                            {showIncidents
+                                                ? 'Collapse Fatal Incidents'
+                                                : 'Show All Fatal Incidents'}
+                                        </Button>
+                                    )}
                             </div>
                         )
                         : (
@@ -253,15 +293,9 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                     sectionStyle,
                     { minHeight: '8rem' },
                 )}>
-                    <Header size='large' style={S.concat(
-                        S.textCenter,
-                        S.m1y,
-                        { maxWidth: '40rem' }
-                    )}>
-                        {makeElectionsHeader(props)}
-                    </Header>
+                    {makeElectionsHeader(props)}
                 </div>
-                {props.success && props.elections.length > 0 && (
+                {props.success && props.county.elections.length > 0 && (
                     R.addIndex(R.map)((e: Election, i) => (
                         <div
                             key={i}
@@ -276,19 +310,12 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                                 {R.addIndex(R.map)(
                                     (c: Candidate, i) => (
                                         <Card as='a' href={c.websiteLink} target='_blank' key={i}>
-                                            {/* <Image src={c.imageLink} wrapped ui={false} /> */}
                                             <div className='image' style={{
                                                 height: '300px',
                                                 backgroundImage: `url(${c.imageLink}), url('https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png')`,
                                                 backgroundOrigin: 'center',
                                                 backgroundSize: 'cover',
-                                            }}>
-                                                {/* <object data="http://stackoverflow.com/does-not-exist.png" type="image/png">
-                                                    <img
-                                                        src={c.imageLink}
-                                                        alt="Stack Overflow logo and icons and such" />
-                                                </object> */}
-                                            </div>
+                                            }} />
                                             <Card.Content>
                                                 <Card.Header size='small' color='blue'>{c.name}</Card.Header>
                                                 <Card.Description>
@@ -302,7 +329,7 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                             </Card.Group>
                             <br />
                         </div>
-                    ), props.elections)
+                    ), props.county.elections)
                 )}
                 <div style={S.concat(
                     sectionStyle,
@@ -346,18 +373,18 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
                                         S.textRed,
                                         { textDecoration: 'underline' },
                                     )}>
-                                            The deadline to register to vote in {props.state} is {props.registration.deadline}!
+                                            The deadline to register to vote in {props.state.name} is {props.state.registration.deadline}!
                                         </b>)}
                                     </p>}
                                     footer={props.success && (
                                         <Button
                                             as='a'
-                                            href={props.registration.link}
+                                            href={props.state.registration.link}
                                             target='_blank'
                                             color='blue'
                                             fluid
                                         >
-                                            Register to Vote in {props.state}
+                                            Register to Vote in {props.state.name}
                                         </Button>
                                     )}
                                 />
@@ -443,7 +470,16 @@ export const CountyPage: React.FC<CountyPageProps> = (props) => {
             </Container>
             <Segment inverted vertical style={S.p3y}>
                 <Container>
-                    <Footer />
+                    <Footer>
+                        {props.success && (<Global.Consumer>
+                            {({ layout }) => !layout.mobile && (
+                                <div>
+                                    <p>Once you register, tell everybody you know that you won't silent on November 3rd.</p>
+                                    <InlineSocialBar path={props.sharable.link} />
+                                </div>
+                            )}
+                        </Global.Consumer>)}
+                    </Footer>
                 </Container>
             </Segment>
         </div >

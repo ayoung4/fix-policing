@@ -20,6 +20,49 @@ type SocialBarProps = {
     path: string;
 };
 
+export const InlineSocialBar: React.FC<SocialBarProps> =
+    ({ path }) => (
+        <Menu secondary compact>
+            <Menu.Item fitted>
+                <FacebookShareButton
+                    url={`https://fixpolicing.com/${path}`}
+                >
+                    <FacebookIcon size={32} round />
+                </FacebookShareButton>
+            </Menu.Item>
+            <Menu.Item fitted>
+                <TwitterShareButton
+                    url={`https://fixpolicing.com/${path}`}
+                >
+                    <TwitterIcon size={32} round />
+                </TwitterShareButton>
+            </Menu.Item>
+            <Menu.Item fitted>
+                <LinkedinShareButton
+                    url={`https://fixpolicing.com/${path}`}
+                >
+                    <LinkedinIcon size={32} round />
+                </LinkedinShareButton>
+            </Menu.Item>
+            <Menu.Item fitted>
+                <RedditShareButton
+                    url={`https://fixpolicing.com/${path}`}
+                    windowWidth={660}
+                    windowHeight={460}
+                >
+                    <RedditIcon size={32} round />
+                </RedditShareButton>
+            </Menu.Item>
+            <Menu.Item fitted>
+                <TumblrShareButton
+                    url={`https://fixpolicing.com/${path}`}
+                >
+                    <TumblrIcon size={32} round />
+                </TumblrShareButton>
+            </Menu.Item>
+        </Menu>
+    );
+
 export const ComputerSocialBar: React.FC<SocialBarProps> =
     ({ path }) => (
         <div style={{

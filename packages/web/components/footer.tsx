@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Grid, Header, List } from 'semantic-ui-react';
 import Link from 'next/link';
 
-export const Footer: React.FC = () => (
+export const Footer: React.FC = ({ children }) => (
     <Grid divided inverted stackable>
         <Grid.Row>
             <Grid.Column width={3}>
@@ -73,6 +73,7 @@ export const Footer: React.FC = () => (
                 </List>
             </Grid.Column>
             <Grid.Column width={7}>
+                {children}
             </Grid.Column>
         </Grid.Row>
     </Grid>

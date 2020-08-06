@@ -17,6 +17,7 @@ export type Incident = {
     fleeing: boolean;
     bodyCamera: boolean;
     city: string;
+    county: string;
     link?: string;
 };
 
@@ -42,6 +43,7 @@ export type CountyData = {
 
 export type StateData = {
     name: string;
+    incidents: Incident[];
     registration: RegistrationData;
     counties: CountyData[];
 };
