@@ -24,7 +24,7 @@
     "@fix-policing/shared": "^1.0.6",
     "fp-ts": "^2.6.6",
     "fp-ts-contrib": "^0.1.17",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "puppeteer": "^5.2.1",
     "puppeteer-cluster": "^0.21.0",
     "ramda": "^0.27.0",
